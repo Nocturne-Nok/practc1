@@ -21,32 +21,28 @@ function algorithmRSA() {
     } else {
         console.log("===========================");
 
-        //
         personOne = parseInt(inputPersonOne.value);
         while (!simplicityCheck(personOne)) {
-            personOne ++;
+            personOne++;
         }
         console.log("personOne = " + personOne);
 
-        //
         personTwo = parseInt(inputPersonTwo.value);
         while (!simplicityCheck(personTwo)) {
-            personTwo ++;
+            personTwo++;
         }
         console.log("personTwo = " + personTwo);
 
         n = personOne * personTwo;
-        console.log("n =" + n);
+        console.log("n = " + n);
 
         phiN = (personOne - 1) * (personTwo - 1);
         console.log("phiN = " + phiN);
 
-        //
         for (let i = Math.round(phiN); i > 2; i--) {
             if (simplicityCheck(i) === true) {
                 e = i;
 
-                //
                 for (let j = 2; j < phiN; j++) {
                     tmpD = (phiN * j + 1) / e;
                     if (Number.isInteger(tmpD) === true) {
@@ -78,7 +74,6 @@ function algorithmRSA() {
 }
 
 function simplicityCheck(number) {
-    //
     if (number <= 1) {
         return false;
     }
@@ -91,20 +86,19 @@ function simplicityCheck(number) {
 }
 
 function encryption() {
-    //
-    if (inputPersonOne.value === "" || inputPersonTwo.value === "") {
+    if (publicKey === undefined) {
         alert("Згенеруйте ключі");
     } else {
         if (inputText.value === "") {
             alert("Введіть текст");
-        }else {
+        } else {
             console.log("==encryption==");
             let clearText = (inputText.value).toLowerCase().split('');
             console.log(clearText)
             let cipherText = [];
             for (let i = 0; i < clearText.length; i++) {
                 let letter = clearText[i];
-                let letterIndex
+                let letterIndex;
                 for (let j = 0; j < alphabet.length; j++) {
                     if (letter === alphabet[j]) {
                         letterIndex = j;
@@ -122,22 +116,22 @@ function encryption() {
                 cipherText.push(cipherLetter);
             }
             console.log(cipherText);
-            document.getElementById("cipherTextLabel").textContent = cipherText;
+            document.getElementById("cipherTextLabel").textContent = cipherText.join(", ");
         }
     }
 }
 
 function decryption() {
-    if (cipherTextLabel.value === "") {
+    if (cipherTextLabel.textContent === "") {
         alert("Зашифруйте текст");
     } else {
         console.log("==decryption==");
         let decryptionText = [];
-        let cipherText = (cipherTextLabel.textContent).split(",");
+        let cipherText = (cipherTextLabel.textContent).split(", ").map(str => BigInt(str));
         for (let i = 0; i < cipherText.length; i++) {
             let decryptionLetter;
-            let exponentiation = (BigInt(letterIndex) ** BigInt(d));
-            console.log(cipherText + "^d = " + exponentiation);
+            let exponentiation = (cipherText[i] ** BigInt(d));
+            console.log(cipherText[i] + "^d = " + exponentiation);
             let decryptionLetterIndex = exponentiation % BigInt(n);
             console.log(decryptionLetterIndex);
             for (let j = 0; j < alphabet.length; j++) {
@@ -149,6 +143,6 @@ function decryption() {
             decryptionText.push(decryptionLetter);
         }
         console.log(decryptionText);
-        document.getElementById("decryptionTextLabel").textContent = decryptionText;
+        document.getElementById("decryptionTextLabel").textContent = decryptionText.join("");
     }
 }
